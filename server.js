@@ -15,8 +15,7 @@ const FAVORITES_FILE = path.join(__dirname, "data", "favorites.json");
 
 // Serve frontend static files so the app can be opened on port 3000
 const FRONTEND_PATH = path.join(__dirname, '..', 'frontend');
-app.use(express.static(FRONTEND_PATH));
-app.get('/', (req, res) => res.sendFile(path.join(FRONTEND_PATH, 'index.html')));
+
 
 // Enable CORS for all routes
 app.use(cors({
