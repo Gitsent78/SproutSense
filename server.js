@@ -10,6 +10,7 @@ const path = require("path");
 dotenv.config();
 
 const app = express();
+const PORT = process.env.PORT || 3000;
 const DATA_FILE = path.join(__dirname, "data", "plants.json");
 const FAVORITES_FILE = path.join(__dirname, "data", "favorites.json");
 
@@ -150,7 +151,7 @@ app.post("/identify", upload.single("image"), async (req, res) => {
     }
 });
 
-app.listen(3000, () => console.log("Server running on port 3000"));
+app.listen(PORT, "0.0.0.0", () => console.log(`Server running on port ${PORT}`));
 app.get("/api", (req, res) => {
   res.send("API working 🚀");
 });

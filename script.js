@@ -1,7 +1,14 @@
 // Test connection on page load
-const backendHost = "https://sproutsense-backend-01fi.onrender.com";
-const backendPort = '3000';
-const backendBase = `http://${backendHost}:${backendPort}`;
+const backendBase = (() => {
+    const override = window.__BACKEND_URL__ || "";
+    if (override) return override.replace(/\/$/, "");
+
+    if (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1") {
+        return "http://localhost:3000";
+    }
+
+    return "https://sproutsense-backend-01fi.onrender.com";
+})();
 
 window.addEventListener("load", async () => {
     try {
@@ -10,7 +17,7 @@ window.addEventListener("load", async () => {
         console.log("✅ Backend connected:", data.message);
     } catch (err) {
         console.error("❌ Cannot connect to backend:", err.message);
-        document.getElementById("result").innerHTML = `<p style="color:red;">Cannot connect to backend on http://localhost:3000</p>`;
+        document.getElementById("result").innerHTML = `<p style="color:red;">Cannot connect to backend on ${backendBase}</p>`;
     }
 });
 
