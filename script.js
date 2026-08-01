@@ -1,5 +1,5 @@
 // Test connection on page load
-const backendHost = location.hostname || 'localhost';
+const backendHost = "https://sproutsense-backend-01fi.onrender.com";
 const backendPort = '3000';
 const backendBase = `http://${backendHost}:${backendPort}`;
 
