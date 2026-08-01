@@ -57,6 +57,16 @@ app.post("/favorite", async (req, res) => {
 
 app.post("/identify", upload.single("image"), async (req, res) => {
     try {
+        // Check for required environment variables
+        if (!process.env.PLANT_API_KEY) {
+            console.error("❌ Missing PLANT_API_KEY environment variable");
+            return res.status(500).json({ error: "Server misconfiguration: Missing PLANT_API_KEY" });
+        }
+        if (!process.env.WEATHER_API_KEY) {
+            console.error("❌ Missing WEATHER_API_KEY environment variable");
+            return res.status(500).json({ error: "Server misconfiguration: Missing WEATHER_API_KEY" });
+        }
+
         const imageBuffer = req.file.buffer;
 
         // 🌿 PlantNet API
@@ -146,8 +156,9 @@ app.post("/identify", upload.single("image"), async (req, res) => {
         });
 
     } catch (err) {
-        console.error(err.response?.data || err.message);
-        res.status(500).json({ error: "Error occurred" });
+        const errorMsg = err.response?.data?.message || err.response?.statusText || err.message;
+        console.error("❌ Error in /identify:", errorMsg);
+        res.status(500).json({ error: errorMsg || "Failed to identify plant" });
     }
 });
 
