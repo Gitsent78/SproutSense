@@ -84,56 +84,6 @@ function loadFavorites() {
 
 window.addEventListener('load', loadFavorites);
 
-function detectColor(file) {
-    const img = new Image();
-    img.src = URL.createObjectURL(file);
-
-    img.onload = () => {
-        const canvas = document.getElementById("canvas");
-        const ctx = canvas.getContext("2d");
-
-        canvas.width = img.width;
-        canvas.height = img.height;
-
-        ctx.drawImage(img, 0, 0);
-
-        const data = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
-
-        let r=0,g=0,b=0;
-
-        for (let i = 0; i < data.length; i += 4) {
-            r += data[i];
-            g += data[i+1];
-            b += data[i+2];
-        }
-
-        const total = data.length / 4;
-        r/=total; g/=total; b/=total;
-
-        // Improved color detection: use dominant channel with simple thresholds
-        let color = "Unknown";
-        const max = Math.max(r, g, b);
-        // Ignore very dark/low-saturation images
-        const min = Math.min(r, g, b);
-        const sat = (max - min) / (max || 1);
-
-        if (max === g && g > r + 8 && g > b + 8 && sat > 0.08) {
-            color = "Green";
-        } else if (g >= r && g > b && sat > 0.03) {
-            // mostly greenish
-            color = "Green";
-        } else if (r > g && g > b && r > 80) {
-            // warm / yellowish tones (red>green>blue)
-            color = "Yellow";
-        } else if (r > g && r > b) {
-            // reddish / brownish
-            color = "Brown";
-        }
-
-        document.getElementById("leafColor").innerText = "Leaf Color: " + color;
-    };
-}
-
 function updateDashboard(data) {
     if (!data || !data.length) {
         document.getElementById("dashboard").innerHTML = "";
@@ -187,7 +137,6 @@ async function uploadPlant() {
         document.getElementById("loading").style.display = "block";
         let loadingInterval = null;
         loadingInterval = animateLoading();
-        detectColor(file);
 
         try {
             const formData = new FormData();
